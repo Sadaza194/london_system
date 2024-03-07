@@ -14,7 +14,7 @@ def index(request):
     player_list = Player.objects.order_by(sort)[:num_players] # Param for order by somehow? and for number to dispaly ie. top 5?
 
     context = {"player_list": player_list}
-    output = '<br>'.join(str(player.fname + " " + player.lname) for player in player_list)
+    # output = '<br>'.join(str(player.fname + " " + player.lname) for player in player_list)
 
     return render(request, "rankings/index.html", context)
 
