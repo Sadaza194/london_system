@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-from models.py import Player
+from models import Player
 
 class ChessDriver():
 
@@ -38,7 +38,7 @@ if __name__ == '__main__':
     plist = []
     chess = ChessDriver()
 
-    for i in range(201):
+    for i in range(201): #2700chess lists 202 countries, so we call changeCountry 201 times
         soup = BeautifulSoup(chess.fetchResults(),'xml')
         for c in soup.find_all('tr'):
             p = Player()
@@ -67,6 +67,7 @@ if __name__ == '__main__':
     chess.shutDown()
     print(plist)
 
+# this commented code block will put player data into a csv file
 '''
     for i in range(201):
         soup = BeautifulSoup(chess.fetchResults(),'xml')
