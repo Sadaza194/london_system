@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.template import loader
 from .models import Player
 from yattag import Doc
+from bs4 import BeautifulSoup
 
 from .scraper import ChessDriver
 
