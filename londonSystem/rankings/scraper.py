@@ -35,7 +35,7 @@ class ChessDriver():
 
 if __name__ == '__main__':
 
-    plist = []
+    player_list = []
     chess = ChessDriver()
 
     for i in range(201): #2700chess lists 202 countries, so we call changeCountry 201 times
@@ -48,24 +48,26 @@ if __name__ == '__main__':
                 elif d.get('class') == 'position':
                     p.rank = int(d.string.strip())
                 elif d.get('class') == 'title':
-                    p.title = d.string.strip()
+                    if d.string is not None:
+                        p.title = d.string.strip()
+                    else:
+                        p.title = ''
                 elif d.get('class') == 'name':
-                    p.fname = d.string.strip()
+                    p.fname = d.span.string.strip()
                 elif d.get('class') == 'country f24':
-                    p.country = d.string.strip()
+                    p.country = d.span.string.strip()
                 elif d.get('class') == 'standard':
-                    p.classic_rank = int(d.string.strip())
+                    p.classic_rank = d.span.string.strip()
                 elif d.get('class') == 'rapid canhide':
-                    p.rapid_rank = int(d.string.strip())
+                    p.rapid_rank = d.span.string.strip()
                 elif d.get('class') == 'blitz canhide':
-                    p.blitz_rank = int(d.string.strip())
+                    p.blitz_rank = d.span.string.strip()
                 elif d.get('class') == 'age':
-                    p.age = int(d.string.strip())
-            if p not in plist:
-                plist += p
+                    p.age = int(d.span.string.strip())
+            if p not in player_list:
+                player_list.append(p)
         chess.changeCountry(1)
     chess.shutDown()
-    print(plist)
 
 # this commented code block will put player data into a csv file
 '''
