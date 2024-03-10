@@ -10,7 +10,7 @@ def index(request):
 
     sort = request.GET.get('sort')
     if sort is None: sort = 'rank'
-    num_players = 10 # -1 for all
+    num_players = 10 # -1 for all -- GETS ERROR THAT 'NEGATIVE INDEXING IS NOT ALLOWED'
 
     player_list = Player.objects.order_by(sort)[:num_players] # Param for order by somehow? and for number to dispaly ie. top 5?
 
