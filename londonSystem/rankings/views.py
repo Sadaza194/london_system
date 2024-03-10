@@ -7,9 +7,9 @@ from yattag import Doc
 from .scraper import ChessDriver
 
 # Create your views here.
-# copy+paste main function from scraper.py into index function
-#     Put it after the value of sort is established
-#     Comment out the num_players line and the player_list line
+# To use the scraper code here:
+#     First, comment out the num_players line and the player_list line (lines 19 and 21)
+#     Paste the scraper code after the value of sort is established
 #     You may want to change the part in the scraper code that says for "i in range(201)" to a smaller range value
 
 def index(request):
