@@ -34,41 +34,51 @@ class ChessDriver():
         self.driver.close()
 
     def scrape_to_db(self) -> list:
-        player_list = []
-        for i in range(201): #2700chess lists 202 countries, so we call changeCountry 201 times
-            soup = BeautifulSoup(chess.fetchResults(),'xml')
+        for i in range(1): #2700chess lists 202 countries, so we call changeCountry 201 times
+            soup = BeautifulSoup(self.fetchResults(),'xml')
 
             for c in soup.find_all('tr'):
                 p = Player()
 
                 for d in c.find_all('td'):
-                    if d.span == None:
-                        pass
-                    elif d.get('class') == 'position':
-                        p.rank = int(d.string.strip())
-                    elif d.get('class') == 'title':
+                    if d.get('class') == 'position':
                         if d.string is not None:
-                            p.title = d.string.strip()
+                            p.rank = d.string.strip()
                         else:
-                            p.title = ''
+                            p.rank = "N/A"
+                    elif d.get('class') == 'title':
+                        if d.span.string is not None:
+                            p.title = d.span.string.strip()
+                        else:
+                            p.title = 'N/A'
                     elif d.get('class') == 'name':
-                        p.fname = d.span.string.strip()
+                        p.fname = d.span.string
                     elif d.get('class') == 'country f24':
-                        p.country = d.span.string.strip()
+                        p.country = d.span.string
                     elif d.get('class') == 'standard':
-                        p.classic_rank = d.span.string.strip()
+                        p.classic_rank = d.span.string
                     elif d.get('class') == 'rapid canhide':
-                        p.rapid_rank = d.span.string.strip()
+                        p.rapid_rank = d.span.string
                     elif d.get('class') == 'blitz canhide':
-                        p.blitz_rank = d.span.string.strip()
+                        p.blitz_rank = d.span.string
                     elif d.get('class') == 'age':
-                        p.age = int(d.span.string.strip())
 
-                p.save()
-                player_list += p
+                        if d.span.string is not None:
+                            # p.age = int(d.span.string.strip())
+                            p.age = d.span.string
+                        else:
+                            p.age = 'N/A'
+
+                if p.rank or p.title or p.fname or p.lname or p.age or p.country or p.classic_rank or p.blitz_rank or p.rapid_rank is not None:
+                    print("Saving Player:", p.rank, p.title, p.fname, p.lname, p.age, p.country, p.classic_rank, p.blitz_rank, p.rapid_rank)
+                    p.save()
+                else: 
+                    print("player rank is none:", p.rank, p.title, p.fname, p.lname, p.age, p.country, p.classic_rank, p.blitz_rank, p.rapid_rank)
+
             self.changeCountry(1)
         self.shutDown()
-        return player_list
+        # return player_list
+
 
 
 if __name__ == '__main__':

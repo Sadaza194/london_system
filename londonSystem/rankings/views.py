@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.template import loader
 from .models import Player
@@ -21,7 +21,7 @@ def index(request):
     if sort is None: sort = 'rank'
     num_players = 10 # -1 for all -- GETS ERROR THAT 'NEGATIVE INDEXING IS NOT ALLOWED'
 
-    player_list = Player.objects.order_by(sort)[:num_players] # Param for order by somehow? and for number to dispaly ie. top 5?
+    player_list = Player.objects.order_by(sort) # Param for order by somehow? and for number to dispaly ie. top 5?
 
     context = {"player_list": player_list}
     # output = '<br>'.join(str(player.fname + " " + player.lname) for player in player_list)
@@ -35,17 +35,7 @@ def reload_button(request):
     print("Scraping...")
 
     scraper = ChessDriver()
-    results = scraper.scrape_to_db()
-    for player in results:
-        player.save()
+    scraper.scrape_to_db()
 
-    sort = request.GET.get('sort')
-    if sort is None: sort = 'rank'
-    num_players = 10 # -1 for all -- GETS ERROR THAT 'NEGATIVE INDEXING IS NOT ALLOWED'
-
-    player_list = Player.objects.order_by(sort)[:num_players] # Param for order by somehow? and for number to dispaly ie. top 5?
-
-    context = {"player_list": player_list}
-
-    # index(request)
-    return render(request, "rankings/index.html", context)
+    return redirect(index)
+    # return render(request, "rankings/index.html", context)
