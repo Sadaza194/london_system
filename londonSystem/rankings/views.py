@@ -15,6 +15,8 @@ from .scraper import ChessDriver
 
 def index(request):
 
+    print("Loading home page...")
+
     sort = request.GET.get('sort')
     if sort is None: sort = 'rank'
     num_players = 10 # -1 for all -- GETS ERROR THAT 'NEGATIVE INDEXING IS NOT ALLOWED'
@@ -27,59 +29,23 @@ def index(request):
     return render(request, "rankings/index.html", context)
 
 
-### Return as HTML formatted List
-# def index_old(request):
+def reload_button(request): 
+    # request.GET.get()
+    # Re-scrape Here
+    print("Scraping...")
 
-#     sort = 'fname'
-#     num_players = 10 # -1 for all
+    scraper = ChessDriver()
+    results = scraper.scrape_to_db()
+    for player in results:
+        player.save()
 
-#     player_list = Player.objects.order_by(sort)[:num_players] # Param for order by somehow? and for number to dispaly ie. top 5?
+    sort = request.GET.get('sort')
+    if sort is None: sort = 'rank'
+    num_players = 10 # -1 for all -- GETS ERROR THAT 'NEGATIVE INDEXING IS NOT ALLOWED'
 
-    # doc, tag, text = Doc().tagtext()
+    player_list = Player.objects.order_by(sort)[:num_players] # Param for order by somehow? and for number to dispaly ie. top 5?
 
-    # with tag('table'):
-    #     with tag('tr'):
-    #         with tag('th'):
-    #             text("Rank")
-    #         with tag('th'):
-    #             text('Title')
-    #         with tag('th'):
-    #             text('First Name')
-    #         with tag('th'):
-    #             text('Last Name')    
-    #         with tag('th'):
-    #             text('Country')
-    #         with tag('th'):
-    #             text('Age')
-    #         with tag('th'):
-    #             text('Classic')
-    #         with tag('th'):
-    #             text('Rapid')
-    #         with tag('th'):
-    #             text('Blitz')
+    context = {"player_list": player_list}
 
-        
-    #     for player in Player.objects.order_by('fname'):
-
-    #         with tag('tr'):
-    #             with tag('td'):
-    #                 text(player.rank)
-    #             with tag('td'):
-    #                 text(player.title)
-    #             with tag('td'):
-    #                 text(player.fname)
-    #             with tag('td'):
-    #                 text(player.lname)
-    #             with tag('td'):
-    #                 text(player.country)
-    #             with tag('td'):
-    #                 text(player.age)
-    #             with tag('td'):
-    #                 text(player.classic_rank)
-    #             with tag('td'):
-    #                 text(player.blitz_rank)
-    #             with tag('td'):
-    #                 text(player.rapid_rank)
-
-
-    # return HttpResponse(doc.getvalue())
+    # index(request)
+    return render(request, "rankings/index.html", context)
