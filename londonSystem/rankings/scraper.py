@@ -84,32 +84,4 @@ class ChessDriver():
 if __name__ == '__main__':
 
     chess = ChessDriver()
-
-    for i in range(201): #2700chess lists 202 countries, so we call changeCountry 201 times
-        soup = BeautifulSoup(chess.fetchResults(),'xml')
-        for c in soup.find_all('tr'):
-            p = Player()
-            for d in c.find_all('td'):
-                if d.span == None:
-                    pass
-                elif d.get('class') == 'position':
-                    p.rank = int(d.string.strip())
-                elif d.get('class') == 'title':
-                    if d.string is not None:
-                        p.title = d.string.strip()
-                    else:
-                        p.title = ''
-                elif d.get('class') == 'name':
-                    p.fname = d.span.string.strip()
-                elif d.get('class') == 'country f24':
-                    p.country = d.span.string.strip()
-                elif d.get('class') == 'standard':
-                    p.classic_rank = d.span.string.strip()
-                elif d.get('class') == 'rapid canhide':
-                    p.rapid_rank = d.span.string.strip()
-                elif d.get('class') == 'blitz canhide':
-                    p.blitz_rank = d.span.string.strip()
-                elif d.get('class') == 'age':
-                    p.age = int(d.span.string.strip())
-        chess.changeCountry(1)
-    chess.shutDown()
+    print(chess.scrape_to_db())
