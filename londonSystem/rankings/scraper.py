@@ -113,23 +113,3 @@ if __name__ == '__main__':
                     p.age = int(d.span.string.strip())
         chess.changeCountry(1)
     chess.shutDown()
-
-# this commented code block will put player data into a csv file
-'''
-    for i in range(201):
-        soup = BeautifulSoup(chess.fetchResults(),'xml')
-        for c in soup.find_all('tr'):
-            tmp = ''
-            for d in c.find_all('td'):
-                if d.span == None:
-                    pass
-                elif d.get('class') == 'position':
-                    tmp += d.string.strip() + ';'
-                elif d.span.string == None:
-                    tmp += ' ;'
-                else:
-                    tmp += d.span.string.strip() + ';'
-            if tmp not in final:
-                final.append(tmp + '\n')
-        chess.changeCountry(1)
-'''
