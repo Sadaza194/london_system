@@ -37,7 +37,7 @@ class ChessDriver():
         for i in range(1): #2700chess lists 202 countries, so we call changeCountry 201 times
             soup = BeautifulSoup(self.fetchResults(),'xml')
 
-            for c in soup.find_all('tr'):
+            for c in soup.find_all('tr')[1:]:
                 p = Player()
 
                 for d in c.find_all('td'):
