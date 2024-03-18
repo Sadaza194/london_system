@@ -34,7 +34,7 @@ class ChessDriver():
         self.driver.close()
 
     def scrape_to_db(self) -> list:
-        for i in range(1): #2700chess lists 202 countries, so we call changeCountry 201 times
+        for i in range(3): #2700chess lists 202 countries, so we call changeCountry 201 times
             soup = BeautifulSoup(self.fetchResults(),'xml')
 
             for c in soup.find_all('tr'):
