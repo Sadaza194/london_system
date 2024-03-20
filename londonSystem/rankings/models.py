@@ -18,4 +18,15 @@ class Player(models.Model):
     def __str__(self):
         return str(self.lname + ", " + self.fname)
 
-    
+
+
+class Tournament(models.Model):
+
+    w_player = models.CharField(max_length=100)
+    w_player_rank = models.CharField(max_length=100)
+    b_player = models.CharField(max_length=100)
+    b_player_rank = models.CharField(max_length=100)
+    game_result = models.CharField(max_length=100)
+    number_of_moves = models.CharField(max_length=100)
+    location = models.CharField(max_length=100)
+    date = models.CharField(max_length=100)
