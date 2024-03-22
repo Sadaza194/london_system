@@ -3,8 +3,9 @@ from django.db import models
 # Create your models here.
 
 class Player(models.Model):
-    fname = models.CharField(max_length=100)
-    lname = models.CharField(max_length=100)
+    # fname = models.CharField(max_length=100)
+    # lname = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
     # rank = models.PositiveIntegerField()
     rank = models.CharField(max_length=100)
     title = models.CharField(max_length=100)
@@ -16,7 +17,7 @@ class Player(models.Model):
     blitz_rank = models.CharField(max_length=100)
 
     def __str__(self):
-        return str(self.lname + ", " + self.fname)
+        return str(self.name + ", " + self.title)
 
 
 

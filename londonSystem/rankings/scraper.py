@@ -52,7 +52,7 @@ class ChessDriver():
                         else:
                             p.title = 'N/A'
                     elif d.get('class') == 'name':
-                        p.fname = d.span.string
+                        p.name = d.span.string
                     elif d.get('class') == 'country f24':
                         p.country = d.span.string
                     elif d.get('class') == 'standard':
@@ -69,11 +69,11 @@ class ChessDriver():
                         else:
                             p.age = 'N/A'
 
-                if p.rank or p.title or p.fname or p.lname or p.age or p.country or p.classic_rank or p.blitz_rank or p.rapid_rank is not None:
-                    print("Saving Player:", p.rank, p.title, p.fname, p.lname, p.age, p.country, p.classic_rank, p.blitz_rank, p.rapid_rank)
+                if p.rank or p.title or p.name or p.age or p.country or p.classic_rank or p.blitz_rank or p.rapid_rank is not None:
+                    print("Saving Player:", p.rank, p.title, p.name, p.age, p.country, p.classic_rank, p.blitz_rank, p.rapid_rank)
                     p.save()
                 else: 
-                    print("player rank is none:", p.rank, p.title, p.fname, p.lname, p.age, p.country, p.classic_rank, p.blitz_rank, p.rapid_rank)
+                    print("player rank is none:", p.rank, p.title, p.name, p.age, p.country, p.classic_rank, p.blitz_rank, p.rapid_rank)
 
             self.changeCountry(1)
         self.shutDown()
