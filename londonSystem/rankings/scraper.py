@@ -77,7 +77,6 @@ class ChessDriver():
 
             self.changeCountry(1)
         self.shutDown()
-        # return player_list
 
 
 
