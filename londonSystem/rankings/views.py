@@ -5,7 +5,7 @@ from .models import Player
 from yattag import Doc
 from bs4 import BeautifulSoup
 
-from .scraper import ChessDriver
+from .scraper import ChessScraper
 
 # Create your views here.
 # To use the scraper code here:
@@ -34,8 +34,13 @@ def reload_button(request):
     # Re-scrape Here
     print("Scraping...")
 
-    scraper = ChessDriver()
-    scraper.scrape_to_db()
+    scraper = ChessScraper()
+    scraper.goto('all-fide-players')
+    scraper.scrape_players_to_db(3) #get data from 3 countries (201 by default)
+    
+    #scraper.goto('games')
+    #scraper.scrape_games_to_db(2) #get data from 2 pages (20 by default)
+    scraper.shutDown()
 
     return redirect(index)
     # return render(request, "rankings/index.html", context)
