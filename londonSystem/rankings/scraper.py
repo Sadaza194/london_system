@@ -102,6 +102,7 @@ class ChessScraper():
             self.select('country')
             self.inputKeys([('down',1)])
 
+            
     def scrape_games_to_db(self, pages: int = 20) -> None:
         for i in range(pages): #we collect 20 pages, and thus 1000 games by default
             soup = BeautifulSoup(self.fetchResults(),'xml')
