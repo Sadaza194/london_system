@@ -2,30 +2,50 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-from .models import Player
+from .models import Player, Game
 
-class ChessDriver():
+class ChessScraper():
 
     def __init__(self) -> None:
-        self.website = 'https://2700chess.com/all-fide-players'
         self.driver = webdriver.Firefox()
-        self.driver.get(self.website)
-        field = self.driver.find_element(By.ID, 'count')
-        field.send_keys(Keys.DOWN)
-        field = self.driver.find_element(By.CSS_SELECTOR, '.select2-selection')
-        field.send_keys(Keys.ENTER)
-        field.send_keys(Keys.DOWN*5)
-        field.send_keys(Keys.ENTER)
+        self.field = None
 
-    def changeCountry(self, downs: int) -> None:
-        field = self.driver.find_element(By.CSS_SELECTOR, '.select2-selection')
-        field.send_keys(Keys.ENTER)
-        field.send_keys(Keys.DOWN*downs)
-        field.send_keys(Keys.ENTER)
+    def goto(self, url: str) -> None:
+        self.website = 'https://2700chess.com/' + url
+        self.driver.get(self.website)
+
+    def select(self, category: str) -> None:
+        if category == 'count':
+            self.field = self.driver.find_element(By.ID, 'count')
+        elif category == 'country':
+            self.field = self.driver.find_element(By.CSS_SELECTOR, '.select2-selection')
+        elif category == 'next':
+            self.field = self.driver.find_element(By.CSS_SELECTOR, 'div.col-xs-6:nth-child(2) > a:nth-child(1)')
+        elif category == 'search':
+            if len(self.website) > 30:
+                self.field = self.driver.find_element(By.CSS_SELECTOR, '.btn')
+            else:
+                self.field = self.driver.find_element(By.CSS_SELECTOR, '.btn-2700')
+        self.field.send_keys(Keys.ENTER)
+
+    def inputKeys(self, inputList: list) -> None:
+        for t in inputList:
+            if t[0] == 'down':
+                self.field.send_keys(Keys.DOWN*t[1])
+            elif t[0] == 'up':
+                self.field.send_keys(Keys.UP*t[1])
+            elif t[0] == 'left':
+                self.field.send_keys(Keys.LEFT*t[1])
+            elif t[0] == 'right':
+                self.field.send_keys(Keys.RIGHT*t[1])
+            elif t[0] == 'tab':
+                self.field.send_keys(Keys.TAB*t[1])
+            elif t[0] == 'enter':
+                self.field.send_keys(Keys.ENTER*t[1])
+        self.field.send_keys(Keys.ENTER)
 
     def fetchResults(self) -> str:
-        field = self.driver.find_element(By.CSS_SELECTOR, '.btn')
-        field.send_keys(Keys.ENTER)
+        self.select('search')
         self.driver.get(self.website)
         html = self.driver.page_source
         return html
@@ -33,8 +53,12 @@ class ChessDriver():
     def shutDown(self) -> None:
         self.driver.close()
 
-    def scrape_to_db(self) -> list:
-        for i in range(3): #2700chess lists 202 countries, so we call changeCountry 201 times
+    def scrape_players_to_db(self, countryCount: int = 201) -> list:
+        self.select('count')
+        self.inputKeys([('down',1)])
+        self.select('country')
+        self.inputKeys([('down',5)])
+        for i in range(countryCount): #2700chess lists 202 countries, so we call changeCountry 201 times
             soup = BeautifulSoup(self.fetchResults(),'xml')
 
             for c in soup.find_all('tr')[1:]:
@@ -75,12 +99,40 @@ class ChessDriver():
                 else: 
                     print("player rank is none:", p.rank, p.title, p.name, p.age, p.country, p.classic_rank, p.blitz_rank, p.rapid_rank)
 
-            self.changeCountry(1)
-        self.shutDown()
+            self.select('country')
+            self.inputKeys([('down',1)])
 
-
+            
+    def scrape_games_to_db(self, pages: int = 20) -> None:
+        for i in range(pages): #we collect 20 pages, and thus 1000 games by default
+            soup = BeautifulSoup(self.fetchResults(),'xml')
+            for c in soup.find_all('tr')[1:]:
+                g = Game()
+                for d in c.find_all('td'):
+                    if d.get('class') == 'white_player name':
+                        g.w_player = d.string
+                    elif d.get('class') == 'white_elo rating':
+                        g.w_player_rank = d.string
+                    elif d.get('class') == 'black_player name':
+                        g.b_player = d.string
+                    elif d.get('class') == 'black_elo rating':
+                        g.b_player_rank = d.string
+                    elif d.get('class') == 'popover-game result':
+                        g.game_result = d.a.string
+                    elif d.get('class') == 'plycount':
+                        g.number_of_moves = d.string
+                    elif d.get('class') == 'site':
+                        g.location = d.string
+                    elif d.get('class') == 'date text-align-right':
+                        g.date = d.string
+                print(g.w_player, '(' + g.w_player_rank + ')', 'vs.',
+                g.b_player, '(' + g.b_player_rank + '):', g.game_result,
+                'after', g.number_of_moves, 'moves')
+                print('Played in:', g.location, 'on', g.date)
+                g.save()
+            self.select('next')
 
 if __name__ == '__main__':
 
-    chess = ChessDriver()
-    print(chess.scrape_to_db())
+    chess = ChessScraper('all-fide-players')
+    #print(chess.scrape_to_db())
