@@ -20,7 +20,7 @@ class Player(models.Model):
 
 
 
-class Games(models.Model):
+class Game(models.Model):
 
     w_player = models.CharField(max_length=100)
     w_player_rank = models.CharField(max_length=100)
