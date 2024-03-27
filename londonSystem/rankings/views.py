@@ -36,7 +36,7 @@ def reload_button(request):
 
     scraper = ChessScraper()
     scraper.goto('all-fide-players')
-    scraper.scrape_players_to_db(3) #get data from 3 countries (201 by default)
+    scraper.scrape_players_to_db(5) #get data from 5 countries (201 by default)
     
     #scraper.goto('games')
     #scraper.scrape_games_to_db(2) #get data from 2 pages (20 by default)
