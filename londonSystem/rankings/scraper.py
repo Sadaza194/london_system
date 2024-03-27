@@ -95,7 +95,31 @@ class ChessScraper():
 
                 if p.rank or p.title or p.name or p.age or p.country or p.classic_rank or p.blitz_rank or p.rapid_rank is not None:
                     print("Saving Player:", p.rank, p.title, p.name, p.age, p.country, p.classic_rank, p.blitz_rank, p.rapid_rank)
-                    p.save()
+                    repeated_player = Player.objects.filter(
+                        rank=p.rank,
+                        title=p.title,
+                        name=p.name,
+                        age=p.age,
+                        country=p.country,
+                        classic_rank=p.classic_rank,
+                        blitz_rank=p.blitz_rank,
+                        rapid_rank=p.rapid_rank
+                    )
+                    if repeated_player.exists():
+                        print("Player already exists in database.")
+                        repeated_player = repeated_player.first()
+                        repeated_player.rank = p.rank
+                        repeated_player.title = p.title
+                        repeated_player.name = p.name
+                        repeated_player.age = p.age
+                        repeated_player.country = p.country
+                        repeated_player.classic_rank = p.classic_rank
+                        repeated_player.blitz_rank = p.blitz_rank
+                        repeated_player.rapid_rank = p.rapid_rank
+                        repeated_player.save()
+                        
+                    else:
+                        p.save()
                 else: 
                     print("player rank is none:", p.rank, p.title, p.name, p.age, p.country, p.classic_rank, p.blitz_rank, p.rapid_rank)
 
