@@ -38,8 +38,8 @@ def reload_button(request):
     scraper.goto('all-fide-players')
     scraper.scrape_players_to_db(5) #get data from 5 countries (201 by default)
     
-    #scraper.goto('games')
-    #scraper.scrape_games_to_db(2) #get data from 2 pages (20 by default)
+    scraper.goto('games?page=1') #you need to specify page 1 even though it does that by default
+    scraper.scrape_games_to_db(2) #get data from 2 pages (20 by default)
     scraper.shutDown()
 
     return redirect(index)
