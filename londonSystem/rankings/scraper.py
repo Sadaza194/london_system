@@ -21,6 +21,7 @@ class ChessScraper():
             self.field = self.driver.find_element(By.CSS_SELECTOR, '.select2-selection')
         elif category == 'next':
             self.field = self.driver.find_element(By.CSS_SELECTOR, 'div.col-xs-6:nth-child(2) > a:nth-child(1)')
+            self.website = self.website[:-2] + str(int(self.website[-1])+1)
         elif category == 'search':
             if len(self.website) > 30:
                 self.field = self.driver.find_element(By.CSS_SELECTOR, '.btn')
@@ -44,8 +45,9 @@ class ChessScraper():
                 self.field.send_keys(Keys.ENTER*t[1])
         self.field.send_keys(Keys.ENTER)
 
-    def fetchResults(self) -> str:
-        self.select('search')
+    def fetchResults(self, doSearch: bool = True) -> str:
+        if doSearch:
+            self.select('search')
         self.driver.get(self.website)
         html = self.driver.page_source
         return html
@@ -128,11 +130,11 @@ class ChessScraper():
 
             
     def scrape_games_to_db(self, pages: int = 20) -> None:
-        for i in range(pages): #we collect 20 pages, and thus 1000 games by default
-            soup = BeautifulSoup(self.fetchResults(),'xml')
+        for i in range(pages): #we collect 20 pages, and thus 1000 games, by default
+            soup = BeautifulSoup(self.fetchResults(False),'xml')
             for c in soup.find_all('tr')[1:]:
                 g = Game()
-                for d in c.find_all('td'):
+                for d in c.find_all('td')[:9]:
                     if d.get('class') == 'white_player name':
                         g.w_player = d.string
                     elif d.get('class') == 'white_elo rating':
@@ -149,10 +151,6 @@ class ChessScraper():
                         g.location = d.string
                     elif d.get('class') == 'date text-align-right':
                         g.date = d.string
-                print(g.w_player, '(' + g.w_player_rank + ')', 'vs.',
-                g.b_player, '(' + g.b_player_rank + '):', g.game_result,
-                'after', g.number_of_moves, 'moves')
-                print('Played in:', g.location, 'on', g.date)
                 g.save()
             self.select('next')
 
