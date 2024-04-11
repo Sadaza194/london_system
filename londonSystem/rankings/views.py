@@ -18,8 +18,9 @@ def index(request):
     print("Loading home page...")
 
     sort = request.GET.get('sort')
-    if sort is None: sort = 'rank'
-    num_players = 10 # -1 for all -- GETS ERROR THAT 'NEGATIVE INDEXING IS NOT ALLOWED'
+    if sort is None: 
+        sort = 'rank'
+        num_players = 10 # -1 for all -- GETS ERROR THAT 'NEGATIVE INDEXING IS NOT ALLOWED'
 
     player_list = Player.objects.order_by(sort) # Param for order by somehow? and for number to dispaly ie. top 5?
 
@@ -44,3 +45,12 @@ def reload_button(request):
 
     return redirect(index)
     # return render(request, "rankings/index.html", context)
+
+
+def games(request):
+
+    print("Loading Games page...")
+
+    context = None
+
+    return render(request, "rankings/games.html", context)

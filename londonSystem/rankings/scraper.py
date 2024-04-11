@@ -148,6 +148,8 @@ class ChessScraper():
                     elif d.get('class') == 'plycount':
                         g.number_of_moves = d.string
                     elif d.get('class') == 'site':
+                        if d.string == None:
+                            d.string = 'None'
                         g.location = d.string
                     elif d.get('class') == 'date text-align-right':
                         g.date = d.string
