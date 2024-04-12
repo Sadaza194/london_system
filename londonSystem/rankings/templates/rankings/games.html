@@ -88,6 +88,7 @@
         .footer {
             margin-top: 20px;
             margin-bottom: 0px;
+        
         }
         .menu_header_large {
             margin-bottom: 0px;
@@ -124,7 +125,7 @@
     <div class="table_container">
 
         {% if player_list %}
-            <table id="player_table" class="table table-dark table-striped table-hover">
+            <table id="player_table" class="table table-dark table-bordered table-striped table-hover">
                 <thead>
                     <tr>
                         <th>Rank</th>
@@ -161,10 +162,14 @@
         <div class="navitem">
             <h5 class="menu_header_large">LondonSystem</h5>
         </div>
+
         <div class="navitem">
             <h6>Advanced Chess Data</h6>
         </div>
 
+        <div class="navitem">
+            <a href="{% url 'admin:index' %}">Admin</a>
+        </div>
     </nav>
 
 </body>
