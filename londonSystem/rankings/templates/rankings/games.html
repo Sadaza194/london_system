@@ -88,11 +88,16 @@
         .footer {
             margin-top: 20px;
             margin-bottom: 0px;
+        
         }
         .menu_header_large {
             margin-bottom: 0px;
         }
-
+        .adjust-table {
+            table-layout: auto;
+            width: 100%;
+            white-space: nowrap;
+        }
     </style>
 </head>
 
@@ -107,7 +112,7 @@
             </div>
 
             <div class="navitem">
-                <a href="">Rankings</a>
+                <a href="{% url 'index' %}">Rankings</a>
             </div>
 
             <div class="navitem">
@@ -124,37 +129,37 @@
 
     <div class="table_container">
 
-        {% if player_list %}
-            <table id="player_table" class="table table-dark table-bordered table-striped table-hover">
+        {% if games_list %}
+            <table id="player_table" class="table table-dark table-bordered table-striped table-hover adjust-table">
                 <thead>
                     <tr>
-                        <th style="text-align: center;">Name</th>
-                        <th style="text-align: center;">Title</th>
-                        <th style="width:15%; text-align: center;">Country</th>
-                        <th style="width:10%; text-align: center;">National Rank</th>
-                        <th style="width:5%; text-align: center;">Age</th>
-                        <th style="text-align: center;">Classic</th>
-                        <th style="text-align: center;">Blitz</th>
-                        <th style="text-align: center;">Rapid</th>
+                        <th>Date</th>
+                        <th>White Player</th>
+                        <th>Rank</th>
+                        <th>Black Player</th>
+                        <th>Rank</th>
+                        <th>Result</th>
+                        <th>Moves</th>
+                        <th>Location</th>
                     </tr>
                 </thead>
                 <tbody>
-                {% for player in player_list %}
+                {% for game in games_list %}
                     <tr>
-                        <td> {{ player.name }} </td>
-                        <td> {{ player.title }} </td>
-                        <td> {{ player.country }} </td>
-                        <td> {{ player.rank }} </td>
-                        <td> {{ player.age }} </td>
-                        <td style="text-align: right;"> {{ player.classic_rank }} </td>
-                        <td style="text-align: right;"> {{ player.blitz_rank }} </td>
-                        <td style="text-align: right;"> {{ player.rapid_rank }} </td>
+                        <td> {{ game.date }} </td>
+                        <td> {{ game.w_player }} </td>
+                        <td> {{ game.w_player_rank }} </td>
+                        <td> {{ game.b_player }} </td>
+                        <td> {{ game.b_player_rank }} </td>
+                        <td> {{ game.game_result }} </td>
+                        <td> {{ game.number_of_moves }} </td>
+                        <td> {{ game.location }} </td>
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
         {% else %}
-            <p>No Player Rankings are Available</p>
+            <p>No games are Available</p>
         {% endif %}
     </div>
 
