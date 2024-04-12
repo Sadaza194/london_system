@@ -99,6 +99,7 @@ class ChessScraper():
 
                 if p.rank or p.title or p.name or p.age or p.country or p.classic_rank or p.blitz_rank or p.rapid_rank is not None:
                     print("Saving Player:", p.rank, p.title, p.name, p.age, p.country, p.classic_rank, p.blitz_rank, p.rapid_rank)
+
                     repeated_player = Player.objects.filter(
                         rank=p.rank,
                         title=p.title,
@@ -156,8 +157,41 @@ class ChessScraper():
                     elif d.get('class') == 'date text-align-right':
                         # format date for better sorting
                         date = datetime.strptime(d.string,'%d %b %Y')
+                        # date = d.string[0:9]
+                        # if date is not None:
+                        #     print(date)
+                        #     print(g.date)
                         g.date = date
-                g.save()
+
+                if g.w_player or g.w_player_rank or g.b_player or g.b_player_rank or g.game_result or g.number_of_moves or g.location or g.date is not None:
+                    print("Saving Game:", g.w_player, g.w_player_rank, g.b_player, g.b_player_rank, g.game_result, g.number_of_moves, g.location, g.date)
+                
+                repeated_game = Game.objects.filter(
+                    w_player = g.w_player,
+                    w_player_rank = g.w_player_rank,
+                    b_player = g.b_player,
+                    b_player_rank = g.b_player_rank,
+                    game_result = g.game_result, 
+                    number_of_moves = g.number_of_moves,
+                    location = g.location,
+                    date = g.date
+                )
+                
+                if repeated_game.exists():
+                    print("Game already exists in database.")
+                    repeated_game = repeated_game.first()
+                    repeated_game.w_player = g.w_player
+                    repeated_game.w_player_rank = g.w_player_rank
+                    repeated_game.b_player = g.b_player
+                    repeated_game.b_player_rank = g.b_player_rank
+                    repeated_game.game_result = g.game_result
+                    repeated_game.number_of_moves = g.number_of_moves
+                    repeated_game.location = g.location
+                    repeated_game.date = g.date
+                    repeated_game.save()
+                    
+                else:
+                    g.save()
             self.select('next')
 
 if __name__ == '__main__':

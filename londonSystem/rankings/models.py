@@ -35,3 +35,4 @@ class Game(models.Model):
     number_of_moves = models.CharField(max_length=100)
     location = models.CharField(max_length=100)
     date = models.DateField()
+    # date = models.CharField(max_length=100)

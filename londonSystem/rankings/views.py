@@ -51,6 +51,7 @@ def reload_button(request):
 
 def games(request):
     # tryin to order by date but couldnt get it to work
+    # games_list = Game.objects.all().order_by('date__month', 'date__day', 'date__year')
     games_list = Game.objects.all().order_by('date')
     context = {"games_list": games_list}
     return render(request, "rankings/games.html", context)
