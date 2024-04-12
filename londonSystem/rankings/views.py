@@ -2,8 +2,10 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.template import loader
 from .models import Player
+from .models import Game
 from yattag import Doc
 from bs4 import BeautifulSoup
+
 
 from .scraper import ChessScraper
 
@@ -48,9 +50,10 @@ def reload_button(request):
 
 
 def games(request):
-
-    print("Loading Games page...")
-
-    context = None
-
+    # tryin to order by date but couldnt get it to work
+    games_list = Game.objects.all().order_by('date')
+    context = {"games_list": games_list}
     return render(request, "rankings/games.html", context)
+
+
+

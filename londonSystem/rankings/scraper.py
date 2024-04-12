@@ -3,6 +3,8 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from .models import Player, Game
+from datetime import datetime
+
 
 class ChessScraper():
 
@@ -152,7 +154,9 @@ class ChessScraper():
                             d.string = 'None'
                         g.location = d.string
                     elif d.get('class') == 'date text-align-right':
-                        g.date = d.string
+                        # format date for better sorting
+                        date = datetime.strptime(d.string,'%d %b %Y')
+                        g.date = date
                 g.save()
             self.select('next')
 
